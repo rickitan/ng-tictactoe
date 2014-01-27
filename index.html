@@ -1,0 +1,104 @@
+<html>
+<head>
+    <title>NG - TIC TAC TOE</title>
+    <script src="vendor/angular.min.js"></script>
+    <script src="vendor/angular-resource.min.js"></script>
+    <link href="vendor/bootstrap.css" rel="stylesheet">
+    <link href="vendor/tictactoe.css" rel="stylesheet">
+
+</head>
+<body ng-app="tictactoe">
+
+
+<div ng-controller="GameController">
+    <div class="topContainer">
+        <span>Turn number: {{turnNumber}} <br> Current Player: {{currentPlayer}} <br> </span><button class="btn btn-warning" ng-click="reset()">Reset</button>
+    </div>
+    <div ng-repeat="row in board">
+        <div>
+            <span ng-repeat="tile in row">
+                <div class="btn btn-large tile" ng-click="tilePress($parent.$index, $index)">{{tile}}</div>
+            </span>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    var app = angular.module('tictactoe',[]);
+
+    app.controller('GameController', ['$scope',
+        function($scope) {
+
+            $scope.currentPlayer = "X";
+            $scope.turnNumber = 0;
+            $scope.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]];
+
+            $scope.tilePress = function(row, column){
+                if($scope.board[row][column] == " "){
+                    $scope.board[row][column] = $scope.currentPlayer;
+                    $scope.validate(row, column);
+                }else{
+                    alert("You can't play there!");
+                }
+            }
+
+            $scope.validate = function(row, column){
+                //Check row
+                for(var i = 0; i < 3; i++){
+                    if($scope.board[row][i] != $scope.currentPlayer){
+                        break;
+                    }
+                    if(i == 2){
+                        $scope.playerWon();
+                    }
+                }
+                //Check col
+                for(var i = 0; i < 3; i++){
+                    if($scope.board[i][column] != $scope.currentPlayer){
+                        break;
+                    }
+                    if(i == 2){
+                        $scope.playerWon();
+                    }
+                }
+                //check diag
+                if(row == column){
+                    for(var i = 0; i < 3; i++){
+                        if($scope.board[i][i] != $scope.currentPlayer)
+                            break;
+                        if(i == 2){
+                            $scope.playerWon();
+                        }
+                    }
+                }
+
+                if($scope.turnNumber == 9){
+                    alert("No body won!");
+                }
+
+
+                $scope.turnNumber++;
+                if($scope.turnNumber % 2 != 0){
+                    $scope.currentPlayer = "O";
+                }else{
+                    $scope.currentPlayer = "X";
+                }
+            }
+
+            $scope.playerWon = function(){
+                alert("Player " + $scope.currentPlayer + " won!");
+            }
+
+            $scope.reset = function(){
+                $scope.board = [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]];
+                $scope.turnNumber = 0;
+                $scope.currentPlayer = "X";
+            }
+
+        }]);
+
+
+</script>
+</body>
+</html>
