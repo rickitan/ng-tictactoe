@@ -45,11 +45,13 @@
 
             $scope.validate = function(row, column){
                 //Check row
+                var won = false;
                 for(var i = 0; i < 3; i++){
                     if($scope.board[row][i] != $scope.currentPlayer){
                         break;
                     }
                     if(i == 2){
+                        won = true;
                         $scope.playerWon();
                     }
                 }
@@ -59,6 +61,7 @@
                         break;
                     }
                     if(i == 2){
+                        won = true;
                         $scope.playerWon();
                     }
                 }
@@ -68,17 +71,15 @@
                         if($scope.board[i][i] != $scope.currentPlayer)
                             break;
                         if(i == 2){
+                            won = true;
                             $scope.playerWon();
                         }
                     }
                 }
-
-                if($scope.turnNumber == 9){
+                $scope.turnNumber++;
+                if($scope.turnNumber == 9 && !won){
                     alert("No body won!");
                 }
-
-
-                $scope.turnNumber++;
                 if($scope.turnNumber % 2 != 0){
                     $scope.currentPlayer = "O";
                 }else{
